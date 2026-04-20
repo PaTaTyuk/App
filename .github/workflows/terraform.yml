@@ -1,5 +1,5 @@
 name: Build APK
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -7,27 +7,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            build-essential git ffmpeg libgstreamer1.0-dev \
-            libgstreamer-plugins-base1.0-dev libsdl2-dev \
-            libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
-            libportmidi-dev libswscale-dev libavformat-dev \
-            libavcodec-dev zlib1g-dev libffi-dev libssl-dev \
-            autoconf automake libtool pkg-config cmake unzip \
-            zip openjdk-17-jdk libunwind-dev
+          sudo apt-get install -y build-essential git ffmpeg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libffi-dev libssl-dev autoconf automake libtool pkg-config cmake unzip zip openjdk-17-jdk libunwind-dev
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
       - name: Build with Buildozer
-        run: yes | buildozer android debug
+        # Флаг -v warn уберет лишний спам из логов, чтобы гитхаб не обрывал связь
+        run: yes | buildozer -v warn android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
