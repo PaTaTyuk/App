@@ -15,8 +15,7 @@ jobs:
           pip install buildozer cython==0.29.33
 
       - name: Build with Buildozer
-        # Флаг -v warn уберет лишний спам из логов, чтобы гитхаб не обрывал связь
-        run: yes | buildozer -v warn android debug
+        run: yes | buildozer android debug --loglevel=1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
