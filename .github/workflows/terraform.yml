@@ -7,6 +7,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Buildozer
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            .buildozer
+          key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            ${{ runner.os }}-buildozer-
+
       - name: Install dependencies
         run: |
           sudo apt-get update > /dev/null
@@ -16,10 +26,9 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Авто-подтверждение лицензий Android SDK без использования 'yes |'
+          # Принимаем лицензии Android SDK через пайп, чтобы не падало на build-tools 37
           mkdir -p ~/.android && touch ~/.android/repositories.cfg
-          # Запуск сборки с минимальным логированием
-          buildozer android debug --loglevel=1
+          yes | buildozer android debug --loglevel=1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
