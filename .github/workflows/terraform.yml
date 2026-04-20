@@ -1,5 +1,5 @@
 name: Build APK
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -9,13 +9,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git ffmpeg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libffi-dev libssl-dev autoconf automake libtool pkg-config cmake unzip zip openjdk-17-jdk libunwind-dev
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.33
+          sudo apt-get update > /dev/null
+          sudo apt-get install -y build-essential git ffmpeg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libffi-dev libssl-dev autoconf automake libtool pkg-config cmake unzip zip openjdk-17-jdk libunwind-dev > /dev/null
+          pip install --upgrade pip > /dev/null
+          pip install buildozer cython==0.29.33 > /dev/null
 
       - name: Build with Buildozer
-        run: yes | buildozer android debug --loglevel=1
+        run: |
+          yes | buildozer android debug > /dev/null 2>&1 || { echo "ERROR: Build failed"; buildozer android debug --loglevel=2 | tail -n 100; exit 1; }
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
