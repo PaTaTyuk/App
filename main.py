@@ -4,7 +4,8 @@ from kivy.core.window import Window
 
 class MainApp(App):
     def build(self):
-        Window.clearcolor = (1, 0, 0, 1)
+        Window.fullscreen = 'auto'
+        Window.clearcolor = (0, 1, 0, 1)
         return Widget()
 
 if __name__ == '__main__':
