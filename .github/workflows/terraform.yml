@@ -16,7 +16,10 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          yes | buildozer android debug > /dev/null 2>&1 || { echo "ERROR: Build failed"; buildozer android debug --loglevel=2 | tail -n 100; exit 1; }
+          # Авто-подтверждение лицензий Android SDK без использования 'yes |'
+          mkdir -p ~/.android && touch ~/.android/repositories.cfg
+          # Запуск сборки с минимальным логированием
+          buildozer android debug --loglevel=1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
